@@ -21,3 +21,5 @@ export class AppController {
 
 //database select * from user => raw query
 // ORM/ODM =>find()
+// kết nối xuống database, xử lý các phần mà controllers quản lí
+// controller sẽ phụ trách điều hướng , khai báo routes
