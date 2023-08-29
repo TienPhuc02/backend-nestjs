@@ -27,5 +27,6 @@ module.exports = {
         endOfLine: 'auto',
       },
     ],
+    'prettier/prettier': 0,
   },
 };
