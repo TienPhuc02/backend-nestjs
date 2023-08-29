@@ -7,6 +7,10 @@ export class AppController {
   @Get() /// => api(restful)
   @Render('home') //SSR render hone.ejs
   getHello() {
+    const message = this.appService.getHello();
+    return {
+      message: message,
+    };
     // return 'this.appService.getHello()';
   }
 }
