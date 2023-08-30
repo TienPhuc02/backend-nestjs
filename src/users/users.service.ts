@@ -23,7 +23,6 @@ export class UsersService {
       name: CreateUserDto.name,
     });
     return user;
-
   }
   findAll() {
     return `This action returns all users`;
@@ -36,11 +35,18 @@ export class UsersService {
     return this.userModel.findOne({ _id: id });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  update(id: string, updateUserDto: UpdateUserDto) {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return 'not found user';
+    }
+    const user = this.userModel.findOneAndUpdate(
+      { _id: id },
+      { email: updateUserDto.email, password: updateUserDto.password },
+    );
+    return user;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  remove(id: string) {
+    return this.userModel.findOneAndDelete({ _id: id }, { isDeleted: true });
   }
 }
