@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
-export type UserDocument = HydratedDocument<User>; // định nghĩa kiểu dữ liệu cho document user
+export type UserDocument = HydratedDocument<User>; 
 
 @Schema()
 export class User {

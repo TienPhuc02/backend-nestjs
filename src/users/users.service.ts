@@ -9,21 +9,18 @@ import { genSaltSync, hashSync } from 'bcryptjs';
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
-  // có 1 biến userModel này là ngữ cảnh để thao tác với cơ sở dữ liệu MongoDB.
-  //userModel, bạn có thể gọi các phương thức Mongoose như create, find, findOne, updateOne, deleteOne,... để tương tác với dữ liệu.
-  //nhờ có phần decorator @InjectModel(User.name)  -> kết nối với userSchema và biến userModel ứng với model nào
-  //kiểu giá trị là Model của mongoose
   getHashPassword = (password: string) => {
     const salt = genSaltSync(10);
     const hash = hashSync(password, salt);
     return hash;
   };
-  async create(email: string, password: string, name: string) {
-    const hashPassword = this.getHashPassword(password);
+  async create(CreateUserDto: CreateUserDto) {
+    // async create(email: string, password: string, name: string) {
+    const hashPassword = this.getHashPassword(CreateUserDto.password);
     const user = await this.userModel.create({
-      email,
+      email: CreateUserDto.email,
       password: hashPassword,
-      name,
+      name: CreateUserDto.name,
     });
     return user;
   }
@@ -43,4 +40,3 @@ export class UsersService {
     return `This action removes a #${id} user`;
   }
 }
-//plain text(text thường) -> hash text(mã hóa)

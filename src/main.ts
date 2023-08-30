@@ -11,6 +11,5 @@ async function bootstrap() {
   app.setViewEngine('ejs');
   const port = configService.get<string>('PORT');
   await app.listen(port);
-  //chạy nest trên cổng 3000
 }
 bootstrap();
