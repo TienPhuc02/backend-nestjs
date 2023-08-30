@@ -9,13 +9,13 @@ export class CreateUserDto {
     message: 'Please Enter Your Password',
   })
   password: string;
-  @IsNotEmpty({
-    message: 'Please Enter Your Name',
-  })
+  // @IsNotEmpty({
+  //   message: 'Please Enter Your Name',
+  // })
   name: string;
-  @IsNotEmpty({
-    message: 'Please Enter Your Address',
-  })
+  // @IsNotEmpty({
+  //   message: 'Please Enter Your Address',
+  // })
   address: string;
 }
 //DTO , muốn data giữa FE và BE thống nhất với nhau

@@ -3,7 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { genSaltSync, hashSync } from 'bcryptjs';
 
 @Injectable()
@@ -23,21 +23,17 @@ export class UsersService {
       name: CreateUserDto.name,
     });
     return user;
-    //hiểu đơn giản CreateUserDto là FE nó truyền lên cho thg @Body nhặt vào 
-    //const user = await this.userModel.create({
-    //   email: CreateUserDto.email,
-    //   password: hashPassword,
-    //   name: CreateUserDto.name,
-    // });
-    // return user;
-    // cái đoạn này là lấy thông tin từ FE(CreateUserDto) và nhờ userSchema lưu thông tin từ FE(CreateUserDto) xuống mongoDB
+
   }
   findAll() {
     return `This action returns all users`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  findOne(id: string) {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return 'not found user';
+    }
+    return this.userModel.findOne({ _id: id });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

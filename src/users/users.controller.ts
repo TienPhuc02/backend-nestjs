@@ -29,10 +29,12 @@ export class UsersController {
   findAll() {
     return this.usersService.findAll();
   }
-
+  // chú ý param route
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+    //const id= req.params.id
+    // lấy giá trị có key là id từ param
+    return this.usersService.findOne(id);
   }
 
   @Patch(':id')
