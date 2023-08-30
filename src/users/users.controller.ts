@@ -18,9 +18,6 @@ export class UsersController {
 
   @Post()
   create(
-    // @Body('email') email: string,
-    // @Body('password') password: string,
-    // @Body('name') name: string,
     @Body() CreateUserDto: CreateUserDto,
   ) {
     return this.usersService.create(CreateUserDto);
@@ -33,8 +30,6 @@ export class UsersController {
   // chú ý param route
   @Get(':id')
   findOne(@Param('id') id: string) {
-    //const id= req.params.id
-    // lấy giá trị có key là id từ param
     return this.usersService.findOne(id);
   }
 
@@ -48,4 +43,3 @@ export class UsersController {
     return this.usersService.remove(id);
   }
 }
-//plain text(text thường) -> hash text(mã hóa)

@@ -4,7 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import mongoose, { Model } from 'mongoose';
-import { genSaltSync, hashSync } from 'bcryptjs';
+import { genSaltSync, hashSync, compareSync } from 'bcryptjs';
 
 @Injectable()
 export class UsersService {
@@ -15,7 +15,6 @@ export class UsersService {
     return hash;
   };
   async create(CreateUserDto: CreateUserDto) {
-    // async create(email: string, password: string, name: string) {
     const hashPassword = this.getHashPassword(CreateUserDto.password);
     const user = await this.userModel.create({
       email: CreateUserDto.email,
@@ -34,7 +33,14 @@ export class UsersService {
     }
     return this.userModel.findOne({ _id: id });
   }
-
+  findOneByUsername(username: string) {
+    return this.userModel.findOne({ email: username });
+  }
+  //check xem có đúng email không
+  isValidPassword(password: string, hashPassword: string) {
+    return compareSync(password, hashPassword);
+  }
+  //check password nhập vào với hash password
   update(id: string, updateUserDto: UpdateUserDto) {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return 'not found user';
