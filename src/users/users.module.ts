@@ -7,6 +7,7 @@ import { User, UserSchema } from './schemas/user.schema';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    //cấu hình model vào module
     //name = User.name như là kiểu  định nhanh 1 id cho 1  model
   ],
   controllers: [UsersController],

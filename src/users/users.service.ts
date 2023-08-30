@@ -4,17 +4,25 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
+import { genSaltSync, hashSync } from 'bcryptjs';
 
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
-  // create(createUserDto: CreateUserDto) {
-  //   return 'This action adds a new user';
-  // }
+  // có 1 biến userModel này là ngữ cảnh để thao tác với cơ sở dữ liệu MongoDB.
+  //userModel, bạn có thể gọi các phương thức Mongoose như create, find, findOne, updateOne, deleteOne,... để tương tác với dữ liệu.
+  //nhờ có phần decorator @InjectModel(User.name)  -> kết nối với userSchema và biến userModel ứng với model nào
+  //kiểu giá trị là Model của mongoose
+  getHashPassword = (password: string) => {
+    const salt = genSaltSync(10);
+    const hash = hashSync(password, salt);
+    return hash;
+  };
   async create(email: string, password: string, name: string) {
+    const hashPassword = this.getHashPassword(password);
     const user = await this.userModel.create({
       email,
-      password,
+      password: hashPassword,
       name,
     });
     return user;
@@ -35,5 +43,4 @@ export class UsersService {
     return `This action removes a #${id} user`;
   }
 }
-// kết nối xuống database, xử lý các phần mà controllers quản lí
-// controller sẽ phụ trách điều hướng , khai báo routes
+//plain text(text thường) -> hash text(mã hóa)
