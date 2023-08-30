@@ -23,6 +23,14 @@ export class UsersService {
       name: CreateUserDto.name,
     });
     return user;
+    //hiểu đơn giản CreateUserDto là FE nó truyền lên cho thg @Body nhặt vào 
+    //const user = await this.userModel.create({
+    //   email: CreateUserDto.email,
+    //   password: hashPassword,
+    //   name: CreateUserDto.name,
+    // });
+    // return user;
+    // cái đoạn này là lấy thông tin từ FE(CreateUserDto) và nhờ userSchema lưu thông tin từ FE(CreateUserDto) xuống mongoDB
   }
   findAll() {
     return `This action returns all users`;
