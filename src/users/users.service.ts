@@ -33,14 +33,14 @@ export class UsersService {
     }
     return this.userModel.findOne({ _id: id });
   }
+  //check xem có đúng email không
   findOneByUsername(username: string) {
     return this.userModel.findOne({ email: username });
   }
-  //check xem có đúng email không
+  //check password nhập vào với hash password
   isValidPassword(password: string, hashPassword: string) {
     return compareSync(password, hashPassword);
   }
-  //check password nhập vào với hash password
   update(id: string, updateUserDto: UpdateUserDto) {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return 'not found user';
