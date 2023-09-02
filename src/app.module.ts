@@ -18,7 +18,6 @@ import { AuthModule } from './auth/auth.module';
     ConfigModule.forRoot({ isGlobal: true }),
     UsersModule,
     AuthModule,
-   
   ],
   controllers: [AppController],
   providers: [AppService],

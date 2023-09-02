@@ -18,3 +18,5 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     return user;
   }
 }
+//Đây là một chiến lược (strategy) xác thực. Nó định nghĩa cách xác thực tên người dùng và mật khẩu bằng phương thức xác thực "local".
+// local stategy là xác thực tài khoản mật khẩu, local auth thì xác thực đã đăng nhập hay chưa
