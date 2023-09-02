@@ -5,7 +5,7 @@ import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './passport/local.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtStrategy } from './jwt.stategy';
+import { JwtStrategy } from './passport/jwt.stategy';
 @Module({
   imports: [
     UsersModule,
@@ -25,10 +25,4 @@ import { JwtStrategy } from './jwt.stategy';
   exports: [AuthService],
 })
 export class AuthModule {}
-//passport-jwt -> stategy này sẽ nhả ra được, tạo ra jwt , -> nó cũng có thể dùng để giải mã token
-//app.controller gọi authService để ném về token
-//auth Module có JwtModule -> export AuthService ra
-// DI JwtService vào auth.service -> gọi từ hàm sign ,mình muốn kí payload là gì thì mình truyền vào thôi, hàm login trả ra access_token
-
-//mỗi lần vào route nào thì cần jwt
-//prodiver JwtStategy để cho ứng dụng biết việc lấy token và giải mã token của ứng dụng trong mỗi 1 lần gửi request
+//có 2 lỗi về token: 1 là client không truyền lên token, 2 là token không hợp lệ(token hết hạn, token sai)

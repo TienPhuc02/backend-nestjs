@@ -1,5 +1,4 @@
-//file này thể hiện việc thư viện xử lí token như nào, encode decode như nào
-//jwt-auth guard check xem có xử lý stategy hay không
+
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
@@ -19,4 +18,4 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     return { userId: payload.sub, username: payload.username };
   }
 }
-//hàm validate dùng jwt để lấy  thông tin user hoặc là bảo về route với access_token
+// xử lý jwt.authguard cách lấy jwt và giải mã jwt

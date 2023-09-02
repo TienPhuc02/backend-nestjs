@@ -32,4 +32,4 @@ export class AppController {
     return req.user;
   }
 }
-//bảo vệ route bằng UseGuards như kìa thì từng route chưa tối ưu, có cách bảo vệ route global
+
