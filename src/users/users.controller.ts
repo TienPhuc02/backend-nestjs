@@ -12,15 +12,21 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-
+import { Public, ResponseMessage, User } from 'src/decorator/customize';
+import { IUser } from './users.interface';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() CreateUserDto: CreateUserDto) {
-    return this.usersService.create(CreateUserDto);
+  @ResponseMessage('Create A New User Success!!')
+  async create(@Body() createUserDto: CreateUserDto, @User() user: IUser) {
+    const newUser = await this.usersService.create(createUserDto, user);
+    return {
+      _id: newUser?._id,
+      createAt: newUser?.createdAt
+    };
   }
   @Get()
   findAll() {

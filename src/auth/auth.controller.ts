@@ -30,7 +30,7 @@ export class AuthController {
   handleRegister(@Body() registerUserDto: RegisterUserDto) {
     return this.authService.register(registerUserDto);
   }
-
+  //@Body thường được sử dụng để ánh xạ dữ liệu từ các yêu cầu POST hoặc PUT, trong khi @Request thường được sử dụng để ánh xạ dữ liệu từ các yêu cầu GET hoặc DELETE.
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Request() req) {
