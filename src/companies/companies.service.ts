@@ -4,17 +4,17 @@ import { UpdateCompanyDto } from './dto/update-company.dto';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { Company, CompanyDocument } from './schema/company.schema';
 import { InjectModel } from '@nestjs/mongoose';
+import mongoose from 'mongoose';
+import { IUser } from 'src/users/users.interface';
 @Injectable()
 export class CompaniesService {
   constructor(
     @InjectModel(Company.name)
-    // @InjectModel(Company.name) sẽ gắn một đối tượng Model của Mongoose có tên Company vào biến companyModel trong dịch vụ.
     private companyModel: SoftDeleteModel<CompanyDocument>,
-  ) {} 
-    //DI model từ mongoose vào service dùng để lưu data đã 
+  ) {}
+
   create(createCompanyDto: CreateCompanyDto) {
     return this.companyModel.create({ ...createCompanyDto });
-    // companyModel từ schema trong mongoose tạo từ request DTO đã validate
   }
 
   findAll() {
@@ -25,11 +25,27 @@ export class CompaniesService {
     return `This action returns a #${id} company`;
   }
 
-  update(id: number, updateCompanyDto: UpdateCompanyDto) {
-    return `This action updates a #${id} company`;
+  update(id: string, updateCompanyDto: UpdateCompanyDto, user: IUser) {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return 'not found company';
+    }
+    const company = this.companyModel.findOneAndUpdate(
+      { _id: id },
+      {
+        ...updateCompanyDto,
+        updatedBy: {
+          _id: user._id,
+          email: user.email,
+        },
+      },
+    );
+    return company;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} company`;
+  remove(id: string) {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return 'not found company';
+    }
+    return this.companyModel.findOneAndDelete({ _id: id }, { isDeleted: true });
   }
 }

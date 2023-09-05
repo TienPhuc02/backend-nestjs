@@ -3,9 +3,9 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { CompaniesService } from './companies.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
@@ -19,11 +19,7 @@ export class CompaniesController {
 
   @Post()
   create(@Body() createCompanyDto: CreateCompanyDto, @User() user: IUser) {
-    // DTO validate dữ liệu truyền lên
-    // return user;
-    // trả infor user from request bằng decorator
     return this.companiesService.create(createCompanyDto);
-    //sử dụng hàm create từ compant service
   }
 
   @Get()
@@ -36,13 +32,17 @@ export class CompaniesController {
     return this.companiesService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCompanyDto: UpdateCompanyDto) {
-    return this.companiesService.update(+id, updateCompanyDto);
+  @Put(':id')
+  update(
+    @Param('id') id: string,
+    @Body() updateCompanyDto: UpdateCompanyDto,
+    @User() user:IUser,
+  ) {
+    return this.companiesService.update(id, updateCompanyDto, user);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.companiesService.remove(+id);
+    return this.companiesService.remove(id);
   }
 }
