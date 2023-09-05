@@ -20,13 +20,13 @@ export class CompaniesService {
   }
 
   async findAll(currentPage: number, pageSize: number, qs: string) {
-    const { filter, sort, projection, population } = aqp(qs);
+    const { filter, sort, population } = aqp(qs);
     delete filter.current;
-    delete filter.pageSize;// bỏ qua current và pageSize để lấy full item trước đã rồi lọc
-    const offset: number = (+currentPage - 1) * +pageSize;// bỏ qua bao nhiêu phần tử
-    const defaultLimit: number = +pageSize ? +pageSize : 10;//lấy ra số phần tử trong 1 trang
-    const totalItems = (await this.companyModel.find(filter)).length;// lấy ra tổng số lượng của tất cả các phần tử
-    const totalPages = Math.ceil(totalItems / defaultLimit);//lấy ra tổng số trang 
+    delete filter.pageSize; // bỏ qua current và pageSize để lấy full item trước đã rồi lọc
+    const offset: number = (+currentPage - 1) * +pageSize; // bỏ qua bao nhiêu phần tử
+    const defaultLimit: number = +pageSize ? +pageSize : 10; //lấy ra số phần tử trong 1 trang
+    const totalItems = (await this.companyModel.find(filter)).length; // lấy ra tổng số lượng của tất cả các phần tử
+    const totalPages = Math.ceil(totalItems / defaultLimit); //lấy ra tổng số trang
     const result = await this.companyModel
       .find(filter)
       // tìm theo điều kiện
@@ -34,11 +34,10 @@ export class CompaniesService {
       // bỏ qua bao nhiêu phần tử
       .limit(defaultLimit)
       // bao nhiêu phần tử 1 trang
-      // @ts-ignore: Unreachable code error
-      .sort(sort)
+      .sort(sort as any)
       .populate(population)
       .exec();
-      //chọc xuống database nên sẽ là hàm promise async await 
+    //chọc xuống database nên sẽ là hàm promise async await
     return {
       meta: {
         current: currentPage, //trang hiện tại

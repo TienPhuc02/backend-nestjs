@@ -27,16 +27,13 @@ export class CompaniesController {
   findAll(
     @Query('current') currentPage: string,
     @Query('pageSize') pageSize: string,
-    // lấy giá trị của key pageSize,current từ query và gán vào biến currentPage và pageSize 
+    
     @Query() qs: string, 
-  // lấy ra giá trị dưới dạng object với key là qs "qs": {
-  //     "current": "1",
-  //     "pageSize": "4"
-  // }
+ 
   ) {
-    // return { qs };
+ 
     return this.companiesService.findAll(+currentPage, +pageSize, qs);
-    // truyền vào hàm findAll bên service xử lý
+   
   }
 
   @Get(':id')
