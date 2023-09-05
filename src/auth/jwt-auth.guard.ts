@@ -13,6 +13,8 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     super();
   }
   canActivate(context: ExecutionContext) {
+    //ExecutionContext là không gian thự thi code, khi vào ExcutionContext mình có thể lấy request=> req.user
+
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
@@ -24,13 +26,10 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   }
 
   handleRequest(err, user, info) {
-    // You can throw an exception based on either "info" or "err" arguments
     if (err || !user) {
-      throw err || new UnauthorizedException('Token không hợp lệ');
+      throw err || new UnauthorizedException('Token không hợp lệ/không có Bearer Token ở Header');
     }
     return user;
   }
 }
-//để lấy được metadata ra cần 1 class của nestjs là reflector
-// nestjs muốn lấy ra metadata truyền vào key mình khai báo bên Public và dùng 1 hàm của reflector
-//nếu không có isPublic thì framework nó tự làm,tự check jwt return super.canActivate(context);
+
