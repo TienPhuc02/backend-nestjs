@@ -9,7 +9,9 @@ export class CompaniesController {
 
   @Post()
   create(@Body() createCompanyDto: CreateCompanyDto) {
+    // DTO validate dữ liệu truyền lên
     return this.companiesService.create(createCompanyDto);
+    //sử dụng hàm create từ compant service
   }
 
   @Get()
