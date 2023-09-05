@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, RegisterUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
@@ -14,14 +14,27 @@ export class UsersService {
     const hash = hashSync(password, salt);
     return hash;
   };
-  async create(CreateUserDto: CreateUserDto) {
-    const hashPassword = this.getHashPassword(CreateUserDto.password);
+  async create(createUserDto: CreateUserDto) {
+    const hashPassword = this.getHashPassword(createUserDto.password);
     const user = await this.userModel.create({
-      email: CreateUserDto.email,
+      email: createUserDto.email,
       password: hashPassword,
-      name: CreateUserDto.name,
+      name: createUserDto.name,
     });
     return user;
+  }
+  async register(user: RegisterUserDto) {
+    const { name, email, password, age, gender, address } = user;
+    const hashPassword = this.getHashPassword(password);
+    const newRegister = await this.userModel.create({
+      name: name,
+      email: email,
+      password: hashPassword,
+      age: age,
+      gender: gender,
+      address: address,
+    });
+    return newRegister;
   }
   findAll() {
     return `This action returns all users`;

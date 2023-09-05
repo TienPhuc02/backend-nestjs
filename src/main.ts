@@ -16,12 +16,11 @@ async function bootstrap() {
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('ejs');
   app.useGlobalPipes(new ValidationPipe());
-  //config version
   app.setGlobalPrefix("api")
   app.enableVersioning({
     type: VersioningType.URI,
-    // prefix: 'api/v',
-    defaultVersion: ['1', '2'],//v1,v2
+    
+    defaultVersion: ['1', '2'],
   });
   const port = configService.get<string>('PORT');
   await app.listen(port);

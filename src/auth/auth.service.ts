@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { IUser } from 'src/users/users.interface';
+import { CreateUserDto, RegisterUserDto } from 'src/users/dto/create-user.dto';
 @Injectable()
 export class AuthService {
   constructor(
@@ -31,11 +32,18 @@ export class AuthService {
     };
     return {
       access_token: this.jwtService.sign(payload),
-      // tạo access_token từ payload với hàm sign
       _id,
       name,
       email,
       role,
+    };
+  }
+  async register(user: RegisterUserDto) {
+    const newUser = await this.usersService.register(user);
+    //chuuyển thông tin qua usersService vì usersService đang chọc xuống database chọc xuống model User, và usersService có khả năng hashPassword
+    return {
+      _id: newUser?._id,
+      createdAt: newUser?.createdAt,
     };
   }
 }

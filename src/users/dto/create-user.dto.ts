@@ -49,6 +49,31 @@ export class CreateUserDto {
   @ValidateNested()
   @Type(() => Company)
   company: Company;
-  //validate object
 }
-export class RegisterUserDto {}
+export class RegisterUserDto {
+  @IsNotEmpty({
+    message: 'Please Enter Your Password',
+  })
+  name: string;
+  @IsEmail({}, { message: 'Invalid email message' })
+  @IsNotEmpty({
+    message: 'Please Enter Your Email',
+  })
+  email: string;
+  @IsNotEmpty({
+    message: 'Please Enter Your Password',
+  })
+  password: string;
+  @IsNotEmpty({
+    message: 'Please Enter Your Age',
+  })
+  age: number;
+  @IsNotEmpty({
+    message: 'Please Enter Your Gender',
+  })
+  gender: string;
+  @IsNotEmpty({
+    message: 'Please Enter Your Address',
+  })
+  address: string;
+}

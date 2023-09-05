@@ -28,4 +28,4 @@ import { AuthController } from './auth.controller';
   exports: [AuthService],
 })
 export class AuthModule {}
-//có 2 lỗi về token: 1 là client không truyền lên token, 2 là token không hợp lệ(token hết hạn, token sai)
+

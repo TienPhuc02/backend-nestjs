@@ -17,4 +17,3 @@ export const User = createParamDecorator(
     return request.user;
   },
 );
-//decorator này dùng để lấy thông tin user khi request bằng cách sử dụng decorator
