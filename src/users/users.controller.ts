@@ -25,7 +25,7 @@ export class UsersController {
     const newUser = await this.usersService.create(createUserDto, user);
     return {
       _id: newUser?._id,
-      createAt: newUser?.createdAt
+      createAt: newUser?.createdAt,
     };
   }
   @Get()
@@ -36,6 +36,13 @@ export class UsersController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
+  }
+
+  @ResponseMessage('Update A New User Success!!')
+  @Patch()
+  async updateUser(@Body() updateUserDto: UpdateUserDto, @User() user: IUser) {
+    const updatedUser = await this.usersService.updateUser(updateUserDto, user);
+    return updatedUser;
   }
 
   @Put(':id')

@@ -9,6 +9,10 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   })
   email: string;
   @IsNotEmpty({
+    message: 'Please Enter Your Email',
+  })
+  _id: string;
+  @IsNotEmpty({
     message: 'Please Enter Your Password',
   })
   password?: string;

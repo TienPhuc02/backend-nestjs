@@ -22,7 +22,8 @@ export class UsersService {
     return hash;
   };
   async create(createUserDto: CreateUserDto, @User() user: IUser) {
-    const { name, email, password, gender, age, address, role, company } = createUserDto;
+    const { name, email, password, gender, age, address, role, company } =
+      createUserDto;
     const isExist = await this.userModel.findOne({ email });
     if (isExist) {
       throw new BadRequestException(
@@ -95,7 +96,19 @@ export class UsersService {
     );
     return user;
   }
-
+  async updateUser(updateUserDto: UpdateUserDto, user: IUser) {
+    const userUpdated = await this.userModel.updateOne(
+      { _id: updateUserDto._id },
+      {
+        ...updateUserDto,
+        updatedBy: {
+          _id: user._id,
+          email: user.email,
+        },
+      },
+    );
+    return userUpdated;
+  }
   remove(id: string) {
     return this.userModel.findOneAndDelete({ _id: id }, { isDeleted: true });
   }
