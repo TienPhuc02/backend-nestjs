@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   Put,
+  Query,
 } from '@nestjs/common';
 import { CompaniesService } from './companies.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
@@ -23,8 +24,19 @@ export class CompaniesController {
   }
 
   @Get()
-  findAll() {
-    return this.companiesService.findAll();
+  findAll(
+    @Query('current') currentPage: string,
+    @Query('pageSize') pageSize: string,
+    // lấy giá trị của key pageSize,current từ query và gán vào biến currentPage và pageSize 
+    @Query() qs: string, 
+  // lấy ra giá trị dưới dạng object với key là qs "qs": {
+  //     "current": "1",
+  //     "pageSize": "4"
+  // }
+  ) {
+    // return { qs };
+    return this.companiesService.findAll(+currentPage, +pageSize, qs);
+    // truyền vào hàm findAll bên service xử lý
   }
 
   @Get(':id')
@@ -36,7 +48,7 @@ export class CompaniesController {
   update(
     @Param('id') id: string,
     @Body() updateCompanyDto: UpdateCompanyDto,
-    @User() user:IUser,
+    @User() user: IUser,
   ) {
     return this.companiesService.update(id, updateCompanyDto, user);
   }
