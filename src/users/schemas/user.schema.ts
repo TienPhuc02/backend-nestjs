@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
-
+import { IsEmail, IsNotEmpty } from 'class-validator';
 export type UserDocument = HydratedDocument<User>;
 
 @Schema({ timestamps: true })
@@ -8,6 +8,8 @@ export class User {
   @Prop()
   name: string;
   @Prop({ required: true })
+  @IsEmail({}, { message: 'Invalid Email' })
+  @IsNotEmpty({ message: 'Please Enter Your Email' })
   email: string;
   @Prop({ required: true })
   password: string;
@@ -23,9 +25,9 @@ export class User {
     email: string;
   };
   @Prop()
-  role:string;
+  role: string;
   @Prop()
-  refreshToken:string
+  refreshToken: string;
   @Prop({ type: Object })
   createdAt: {
     _id: mongoose.Schema.Types.ObjectId;
@@ -54,7 +56,7 @@ export class User {
   @Prop()
   isDeleted: boolean;
   @Prop()
-  deletedAt:Date
+  deletedAt: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

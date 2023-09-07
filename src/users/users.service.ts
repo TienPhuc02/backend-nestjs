@@ -2,18 +2,20 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserDto, RegisterUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { User as UserM } from './schemas/user.schema';
+import { UserDocument, User as UserM } from './schemas/user.schema';
 import mongoose, { Model } from 'mongoose';
 import { genSaltSync, hashSync, compareSync } from 'bcryptjs';
 import { Company } from 'src/companies/schema/company.schema';
 import { IUser } from './users.interface';
 import { User } from 'src/decorator/customize';
+import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
+import aqp from 'api-query-params';
 // import { User } from 'src/decorator/customize';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectModel(UserM.name) private userModel: Model<UserM>,
+    @InjectModel(UserM.name) private userModel: SoftDeleteModel<UserDocument>,
     @InjectModel(Company.name) private companyModel: Model<Company>,
   ) {}
   getHashPassword = (password: string) => {
@@ -21,6 +23,40 @@ export class UsersService {
     const hash = hashSync(password, salt);
     return hash;
   };
+
+  //check xem có đúng email không
+  findOneByUsername(username: string) {
+    return this.userModel.findOne({ email: username });
+  }
+  //check password nhập vào với hash password
+  isValidPassword(password: string, hashPassword: string) {
+    return compareSync(password, hashPassword);
+  }
+  update(id: string, updateUserDto: UpdateUserDto) {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return 'not found user';
+    }
+    const user = this.userModel.findOneAndUpdate(
+      { _id: id },
+      { email: updateUserDto.email, password: updateUserDto.password },
+    );
+    return user;
+  }
+
+  //project practice
+  async updateUser(updateUserDto: UpdateUserDto, user: IUser) {
+    const userUpdated = await this.userModel.updateOne(
+      { _id: updateUserDto._id },
+      {
+        ...updateUserDto,
+        updatedBy: {
+          _id: user._id,
+          email: user.email,
+        },
+      },
+    );
+    return userUpdated;
+  }
   async create(createUserDto: CreateUserDto, @User() user: IUser) {
     const { name, email, password, gender, age, address, role, company } =
       createUserDto;
@@ -68,48 +104,56 @@ export class UsersService {
     });
     return newRegister;
   }
-  findAll() {
-    return `This action returns all users`;
-  }
-
-  findOne(id: string) {
+  async remove(id: string, user: IUser) {
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return 'not found user';
+      return `not found user`;
     }
-    return this.userModel.findOne({ _id: id });
-  }
-  //check xem có đúng email không
-  findOneByUsername(username: string) {
-    return this.userModel.findOne({ email: username });
-  }
-  //check password nhập vào với hash password
-  isValidPassword(password: string, hashPassword: string) {
-    return compareSync(password, hashPassword);
-  }
-  update(id: string, updateUserDto: UpdateUserDto) {
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return 'not found user';
-    }
-    const user = this.userModel.findOneAndUpdate(
+    await this.userModel.updateOne(
       { _id: id },
-      { email: updateUserDto.email, password: updateUserDto.password },
-    );
-    return user;
-  }
-  async updateUser(updateUserDto: UpdateUserDto, user: IUser) {
-    const userUpdated = await this.userModel.updateOne(
-      { _id: updateUserDto._id },
       {
-        ...updateUserDto,
-        updatedBy: {
+        deletedBy: {
           _id: user._id,
           email: user.email,
         },
       },
     );
-    return userUpdated;
+    return this.userModel.softDelete({ _id: id });
   }
-  remove(id: string) {
-    return this.userModel.findOneAndDelete({ _id: id }, { isDeleted: true });
+  async findOne(id: string) {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return 'not found user';
+    }
+    return await this.userModel.findOne({ _id: id }).select('-password');
+  }
+  async findAll(current: string, pageSize: string, qs: string) {
+    const { filter, sort, population } = aqp(qs);
+    delete filter.current;
+    delete filter.pageSize; // bỏ qua current và pageSize để lấy full item trước đã rồi lọc
+    const offset: number = (+current - 1) * +pageSize; // bỏ qua bao nhiêu phần tử
+    const defaultLimit: number = +pageSize ? +pageSize : 10; //lấy ra số phần tử trong 1 trang
+    const totalItems = (await this.userModel.find(filter)).length; // lấy ra tổng số lượng của tất cả các phần tử
+    const totalPages = Math.ceil(totalItems / defaultLimit); //lấy ra tổng số trang
+    const result = await this.userModel
+      .find(filter)
+      // tìm theo điều kiện
+      .skip(offset)
+      // bỏ qua bao nhiêu phần tử
+      .limit(defaultLimit)
+      // bao nhiêu phần tử 1 trang
+      .select('-password')
+      .sort(sort as any)
+      .populate(population)
+      .exec();
+    //chọc xuống database nên sẽ là hàm promise async await
+    return {
+      meta: {
+        current: current, //trang hiện tại
+        pageSize: pageSize, //số lượng bản ghi đã lấy
+        pages: totalPages, //tổng số trang với điều kiện query
+        total: totalItems, // tổng số phần tử (số bản ghi)
+      },
+      result, //kết quả query
+      // không cần phải truyền giá trị currentPage vào hàm findAll vì nó được tính toán trong hàm dựa trên offset và defaultLimit.
+    };
   }
 }

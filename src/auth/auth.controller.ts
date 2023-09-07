@@ -36,4 +36,15 @@ export class AuthController {
   getProfile(@Request() req) {
     return req.user;
   }
+
+
+
+  //practice project
+
+  @Public()
+  @UseGuards(LocalAuthGuard)
+  @Post('/login')
+  handleLoginUser(@Request() req) {
+    return this.authService.loginUser(req.user);
+  }
 }

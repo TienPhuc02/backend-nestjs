@@ -38,6 +38,26 @@ export class AuthService {
       role,
     };
   }
+  async loginUser(user: IUser) {
+    const { _id, name, email, role } = user;
+    const payload = {
+      sub: 'token login',
+      iss: 'from server',
+      _id,
+      name,
+      email,
+      role,
+    };
+    return {
+      access_token: this.jwtService.sign(payload),
+      user: {
+        _id,
+        name,
+        email,
+        role,
+      },
+    };
+  }
   async register(user: RegisterUserDto) {
     const newUser = await this.usersService.register(user);
     //chuuyển thông tin qua usersService vì usersService đang chọc xuống database chọc xuống model User, và usersService có khả năng hashPassword
