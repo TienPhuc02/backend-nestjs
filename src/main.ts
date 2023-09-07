@@ -4,6 +4,7 @@ import { join } from 'path';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
+const cookieParser = require('cookie-parser');
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { TransformInterceptor } from './core/transform.interceptor';
 async function bootstrap() {
@@ -16,12 +17,13 @@ async function bootstrap() {
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('ejs');
   app.useGlobalPipes(new ValidationPipe());
-  app.setGlobalPrefix("api")
+  app.setGlobalPrefix('api');
   app.enableVersioning({
     type: VersioningType.URI,
-    
+
     defaultVersion: ['1', '2'],
   });
+  app.use(cookieParser());
   const port = configService.get<string>('PORT');
   await app.listen(port);
 }

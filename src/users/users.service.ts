@@ -156,4 +156,15 @@ export class UsersService {
       // không cần phải truyền giá trị currentPage vào hàm findAll vì nó được tính toán trong hàm dựa trên offset và defaultLimit.
     };
   }
+
+
+  // tìm user đúng với id truyền vào và cập nhập refresh token
+  updateUserToken = async (refreshToken: string, _id: string) => {
+    return await this.userModel.updateOne(
+      { _id: _id },
+      {
+        refreshToken,
+      },
+    );
+  };
 }

@@ -3,7 +3,8 @@ import {
   Controller,
   Get,
   Post,
-  Request,
+  Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -12,6 +13,7 @@ import { LocalAuthGuard } from './local-auth.guard';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { IUser } from 'src/users/users.interface';
 import { CreateUserDto, RegisterUserDto } from 'src/users/dto/create-user.dto';
+import { Request, Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -19,10 +21,14 @@ export class AuthController {
 
   @Public()
   @UseGuards(LocalAuthGuard)
-  @ResponseMessage("Login Success!!")
+  @ResponseMessage('Login Success!!')
   @Post('/login')
-  handleLogin(@Request() req) {
-    return this.authService.login(req.user);
+  handleLogin(
+    // @Req() req: Request & {user},//merge type
+    @Req() req, //merge type
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    return this.authService.login(req.user, response);
   }
 
   @Public()
@@ -34,7 +40,7 @@ export class AuthController {
   //@Body thường được sử dụng để ánh xạ dữ liệu từ các yêu cầu POST hoặc PUT, trong khi @Request thường được sử dụng để ánh xạ dữ liệu từ các yêu cầu GET hoặc DELETE.
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile(@Request() req) {
+  getProfile(@Req() req) {
     return req.user;
   }
 }
