@@ -19,6 +19,7 @@ export class AuthController {
 
   @Public()
   @UseGuards(LocalAuthGuard)
+  @ResponseMessage("Login Success!!")
   @Post('/login')
   handleLogin(@Request() req) {
     return this.authService.login(req.user);
@@ -35,16 +36,5 @@ export class AuthController {
   @Get('profile')
   getProfile(@Request() req) {
     return req.user;
-  }
-
-
-
-  //practice project
-
-  @Public()
-  @UseGuards(LocalAuthGuard)
-  @Post('/login')
-  handleLoginUser(@Request() req) {
-    return this.authService.loginUser(req.user);
   }
 }
