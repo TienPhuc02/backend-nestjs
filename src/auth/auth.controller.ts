@@ -23,11 +23,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @ResponseMessage('Login Success!!')
   @Post('/login')
-  handleLogin(
-    // @Req() req: Request & {user},//merge type
-    @Req() req, //merge type
-    @Res({ passthrough: true }) response: Response,
-  ) {
+  handleLogin(@Req() req, @Res({ passthrough: true }) response: Response) {
     return this.authService.login(req.user, response);
   }
 
@@ -40,11 +36,20 @@ export class AuthController {
 
   //get account when user f5
   @ResponseMessage('Get Account Success!!')
-  @Post('/account')
+  @Get('/account')
   handleGetAccount(@User() user: IUser) {
     return { user };
   }
-  //@Body thường được sử dụng để ánh xạ dữ liệu từ các yêu cầu POST hoặc PUT, trong khi @Request thường được sử dụng để ánh xạ dữ liệu từ các yêu cầu GET hoặc DELETE.
+
+  //refresh API
+  @Public()
+  @ResponseMessage('Get User By Refresh Token Success!!')
+  @Get('/refresh')
+  handleRefreshToken(@Req() request: Request) {
+    const refreshToken = request.cookies['refresh_token'];
+    return this.authService.processNewToken(refreshToken);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Req() req) {
