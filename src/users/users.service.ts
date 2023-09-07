@@ -157,7 +157,6 @@ export class UsersService {
     };
   }
 
-
   // tìm user đúng với id truyền vào và cập nhập refresh token
   updateUserToken = async (refreshToken: string, _id: string) => {
     return await this.userModel.updateOne(
@@ -166,5 +165,12 @@ export class UsersService {
         refreshToken,
       },
     );
+  };
+
+  //tìm user dựa vào refresh token từ database
+  findUserByToken = async (refreshToken: string) => {
+    return await this.userModel.findOne({
+      refreshToken,
+    });
   };
 }

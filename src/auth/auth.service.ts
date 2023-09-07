@@ -74,16 +74,55 @@ export class AuthService {
     });
     return refresh_token;
   };
-  processNewToken = (refreshToken: string) => {
+  processNewToken = async (refreshToken: string, response: Response) => {
     try {
       this.jwtService.verify(refreshToken, {
         secret: this.configService.get<string>('JWT_REFRESH_TOKEN_SECRET'),
       });
+
+      const user = await this.usersService.findUserByToken(refreshToken);
+      console.log(
+        '🚀 ~ file: auth.service.ts:84 ~ AuthService ~ processNewToken= ~ user:',
+        user,
+      );
+      if (user) {
+        const { _id, name, email, role } = user;
+        const payload = {
+          sub: 'token refresh',
+          iss: 'from server',
+          _id,
+          name,
+          email,
+          role,
+        };
+        const refresh_token = this.createRefreshToken(payload);
+
+        //update user with refresh token
+        await this.usersService.updateUserToken(refresh_token, _id.toString());
+
+        //check xem đúng với refresh token của user tạo refresh token đấy hay không
+
+        //set cookies as refresh token
+        response.clearCookie('refresh_token');
+        response.cookie('refresh_token', refresh_token, {
+          httpOnly: true,
+          maxAge:
+            ms(this.configService.get<string>('JWT_REFRESH_EXPIRE')) * 1000,
+        });
+        return {
+          access_token: this.jwtService.sign(payload),
+          user: {
+            _id,
+            name,
+            email,
+            role,
+          },
+        };
+      }
     } catch (error) {
       throw new BadRequestException(
         `Refresh Token không hợp lệ.Vui lòng login`,
       );
-      
     }
   };
   //verify vs decode
