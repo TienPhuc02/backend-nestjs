@@ -1,6 +1,6 @@
-import { Prop, Schema } from '@nestjs/mongoose';
-import mongoose from 'mongoose';
-
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
+export type JobDocument = HydratedDocument<Job>;
 @Schema({ timestamps: true })
 export class Job {
   @Prop()
@@ -29,3 +29,4 @@ export class Job {
   @Prop()
   isActive: boolean;
 }
+export const JobSchema = SchemaFactory.createForClass(Job);

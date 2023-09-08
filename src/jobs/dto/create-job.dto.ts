@@ -9,15 +9,6 @@ export class CreateJobDto {
   @IsNotEmpty({ message: 'Please Enter Your Skill' })
   @Prop({ type: Array })
   skills: string[];
-  @IsNotEmpty({ message: 'Please Enter Your Company' })
-  @Prop({ type: Object })
-  company: {
-    _id: mongoose.Schema.Types.ObjectId;
-    email: string;
-  };
-  @Prop()
-  @IsNotEmpty({ message: 'Please Enter Your Location' })
-  location: string;
   @Prop()
   @IsNotEmpty({ message: 'Please Enter Your Salary' })
   salary: number;
@@ -30,13 +21,13 @@ export class CreateJobDto {
   @IsNotEmpty({ message: 'Please Enter Your Name' })
   @Prop()
   description: string;
-  @IsNotEmpty({ message: 'Please Enter Your StartDate' })
-  @Prop()
-  startDate: Date;
-  @IsNotEmpty({ message: 'Please Enter Your Name' })
+  @IsNotEmpty({ message: 'Please Enter Your EndDate' })
   @Prop()
   endDate: Date;
-  @IsNotEmpty({ message: 'Please Enter Your Name' })
+  @IsNotEmpty({ message: 'Please Enter Your startDate' })
+  @Prop()
+  startDate: Date;
+  @IsNotEmpty({ message: 'Please Enter Your isAcitve' })
   @Prop()
   isActive: boolean;
 }
