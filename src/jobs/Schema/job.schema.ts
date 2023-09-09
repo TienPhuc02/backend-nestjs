@@ -28,5 +28,34 @@ export class Job {
   endDate: Date;
   @Prop()
   isActive: boolean;
+  @Prop({ type: Object })
+  createdAt: {
+    _id: mongoose.Schema.Types.ObjectId;
+    email: string;
+  };
+  @Prop({ type: Object })
+  updatedAt: {
+    _id: mongoose.Schema.Types.ObjectId;
+    email: string;
+  };
+  @Prop({ type: Object })
+  createdBy: {
+    _id: mongoose.Schema.Types.ObjectId;
+    email: string;
+  };
+  @Prop({ type: Object })
+  deletedBy: {
+    _id: mongoose.Schema.Types.ObjectId;
+    email: string;
+  };
+  @Prop({ type: Object })
+  updatedBy: {
+    _id: mongoose.Schema.Types.ObjectId;
+    email: string;
+  };
+  @Prop()
+  isDeleted: boolean;
+  @Prop()
+  deletedAt: Date;
 }
 export const JobSchema = SchemaFactory.createForClass(Job);
