@@ -141,7 +141,7 @@ export class UsersService {
       .limit(defaultLimit)
       // bao nhiêu phần tử 1 trang
       .select('-password')
-      .sort(sort as any)
+      .sort(filter.sort)
       .populate(population)
       .exec();
     //chọc xuống database nên sẽ là hàm promise async await
