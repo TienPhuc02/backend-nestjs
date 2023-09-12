@@ -81,10 +81,6 @@ export class AuthService {
       });
 
       const user = await this.usersService.findUserByToken(refreshToken);
-      console.log(
-        '🚀 ~ file: auth.service.ts:84 ~ AuthService ~ processNewToken= ~ user:',
-        user,
-      );
       if (user) {
         const { _id, name, email, role } = user;
         const payload = {

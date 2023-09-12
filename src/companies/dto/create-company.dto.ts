@@ -1,6 +1,5 @@
 import { IsNotEmpty } from 'class-validator';
 export class CreateCompanyDto {
- //validate dự liệu từ request
   @IsNotEmpty({
     message: 'Please Enter Your Name Company',
   })
@@ -13,7 +12,9 @@ export class CreateCompanyDto {
     message: 'Please Enter Your Description',
   })
   description: string;
-
-  
+  @IsNotEmpty({
+    message: 'Please Enter Your Logo',
+  })
+  logo: string;
 }
 

@@ -7,6 +7,7 @@ import {
   Delete,
   Put,
   Query,
+  Patch,
 } from '@nestjs/common';
 import { CompaniesService } from './companies.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
@@ -19,12 +20,23 @@ export class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}
 
   @Post()
-  create(@Body() createCompanyDto: CreateCompanyDto, @User() user: IUser) {
-    return this.companiesService.create(createCompanyDto);
+  @ResponseMessage('Create A New Company Success!!')
+  async create(
+    @Body() createCompanyDto: CreateCompanyDto,
+    @User() user: IUser,
+  ) {
+    const newCompany = await this.companiesService.create(
+      createCompanyDto,
+      user,
+    );
+    return {
+      _id: newCompany?._id,
+      createAt: newCompany?.createdAt,
+    };
   }
 
   @Get()
-  @ResponseMessage("Fetch List Company With Paginate")
+  @ResponseMessage('Fetch List Company With Paginate')
   findAll(
     @Query('current') currentPage: string,
     @Query('pageSize') pageSize: string,
@@ -39,13 +51,18 @@ export class CompaniesController {
     return this.companiesService.findOne(+id);
   }
 
-  @Put(':id')
-  update(
+  @Patch(':id')
+  async update(
     @Param('id') id: string,
     @Body() updateCompanyDto: UpdateCompanyDto,
     @User() user: IUser,
   ) {
-    return this.companiesService.update(id, updateCompanyDto, user);
+    const newCompany = await this.companiesService.update(
+      id,
+      updateCompanyDto,
+      user,
+    );
+    return newCompany;
   }
 
   @Delete(':id')

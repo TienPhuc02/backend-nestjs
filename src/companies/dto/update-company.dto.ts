@@ -15,4 +15,8 @@ export class UpdateCompanyDto extends PartialType(CreateCompanyDto) {
     message: 'Please Enter Your Description',
   })
   description: string;
+  @IsNotEmpty({
+    message: 'Please Enter Your Logo',
+  })
+  logo: string;
 }

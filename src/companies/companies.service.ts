@@ -7,7 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { IUser } from 'src/users/users.interface';
 import aqp from 'api-query-params';
-import { isEmpty } from 'class-validator';
+import { User } from 'src/decorator/customize';
 @Injectable()
 export class CompaniesService {
   constructor(
@@ -15,8 +15,19 @@ export class CompaniesService {
     private companyModel: SoftDeleteModel<CompanyDocument>,
   ) {}
 
-  create(createCompanyDto: CreateCompanyDto) {
-    return this.companyModel.create({ ...createCompanyDto });
+  async create(createCompanyDto: CreateCompanyDto, @User() user: IUser) {
+    const { name, address, description, logo } = createCompanyDto;
+    const newCompany = await this.companyModel.create({
+      name: name,
+      address: address,
+      description: description,
+      logo: logo,
+      createdBy: {
+        _id: user._id,
+        email: user.email,
+      },
+    });
+    return newCompany;
   }
 
   async findAll(currentPage: number, pageSize: number, qs: string) {
@@ -55,13 +66,17 @@ export class CompaniesService {
   }
 
   update(id: string, updateCompanyDto: UpdateCompanyDto, user: IUser) {
+    const { name, address, description, logo } = updateCompanyDto;
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return 'not found company';
     }
-    const company = this.companyModel.findOneAndUpdate(
+    const company = this.companyModel.updateOne(
       { _id: id },
       {
-        ...updateCompanyDto,
+        name: name,
+        address: address,
+        description: description,
+        logo: logo,
         updatedBy: {
           _id: user._id,
           email: user.email,

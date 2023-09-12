@@ -8,7 +8,6 @@ import { Company, CompanySchema } from './schema/company.schema';
   imports: [
     MongooseModule.forFeature([{ name: Company.name, schema: CompanySchema }]),
   ],
-  //khai báo model của mongoose cho module để DI hoạt động
   controllers: [CompaniesController],
   providers: [CompaniesService],
 })

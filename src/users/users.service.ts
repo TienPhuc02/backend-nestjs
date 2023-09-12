@@ -16,7 +16,6 @@ import aqp from 'api-query-params';
 export class UsersService {
   constructor(
     @InjectModel(UserM.name) private userModel: SoftDeleteModel<UserDocument>,
-    @InjectModel(Company.name) private companyModel: Model<Company>,
   ) {}
   getHashPassword = (password: string) => {
     const salt = genSaltSync(10);
