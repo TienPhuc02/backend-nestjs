@@ -38,17 +38,16 @@ export class MulterConfigService implements MulterOptionsFactory {
     });
   }
 
-
   createMulterOptions(): MulterModuleOptions {
     return {
-        //storage cau hinh multer luu du lieu o dau
-        //diskStorage la muon luu tru file ngay trong o dia cua minh
+      //storage cau hinh multer luu du lieu o dau
+      //diskStorage la muon luu tru file ngay trong o dia cua minh, luu anh ben trong server imageSRC :localhost..
       storage: diskStorage({
         //destination -> ghi de lai dest o tren
         destination: (req, file, cb) => {
           const folder = req?.headers?.folder_type ?? 'default';
           this.ensureExists(`public/images/${folder}`);
-          cb(null, join(this.getRootPath(), `public/images/${folder}`));
+          cb(null, join(this.getRootPath(), `public/files/${folder}`));
         },
 
         //filename giup minh doi ten file
