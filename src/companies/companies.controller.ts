@@ -47,8 +47,8 @@ export class CompaniesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.companiesService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.companiesService.findOne(id);
   }
 
   @Patch(':id')

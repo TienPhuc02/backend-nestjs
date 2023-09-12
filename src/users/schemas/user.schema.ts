@@ -29,15 +29,9 @@ export class User {
   @Prop()
   refreshToken: string;
   @Prop({ type: Object })
-  createdAt: {
-    _id: mongoose.Schema.Types.ObjectId;
-    email: string;
-  };
+  createdAt: Date;
   @Prop({ type: Object })
-  updatedAt: {
-    _id: mongoose.Schema.Types.ObjectId;
-    email: string;
-  };
+  updatedAt: Date;
   @Prop({ type: Object })
   createdBy: {
     _id: mongoose.Schema.Types.ObjectId;
