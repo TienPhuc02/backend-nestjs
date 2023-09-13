@@ -35,7 +35,7 @@ export class CreateResumeDto {
   })
   jobId: mongoose.Schema.Types.ObjectId;
 }
-export class CreateUserCVDto {
+export class CreateResumeCVDto {
   @IsNotEmpty({
     message: 'Please Enter Your url',
   })

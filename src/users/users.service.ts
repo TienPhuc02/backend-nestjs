@@ -3,7 +3,7 @@ import { CreateUserDto, RegisterUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { UserDocument, User as UserM } from './schemas/user.schema';
-import mongoose, { Model } from 'mongoose';
+import mongoose, { Model, ObjectId } from 'mongoose';
 import { genSaltSync, hashSync, compareSync } from 'bcryptjs';
 import { Company } from 'src/companies/schema/company.schema';
 import { IUser } from './users.interface';
@@ -124,6 +124,7 @@ export class UsersService {
     }
     return await this.userModel.findOne({ _id: id }).select('-password');
   }
+
   async findAll(current: string, pageSize: string, qs: string) {
     const { filter, sort, population } = aqp(qs);
     delete filter.current;

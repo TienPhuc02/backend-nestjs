@@ -12,7 +12,6 @@ import { Company, CompanySchema } from 'src/companies/schema/company.schema';
   ],
   controllers: [UsersController],
   providers: [UsersService],
-  exports: [UsersService],
-  //export UsersService để dùng ở nơi mà nó được import vào
+  exports: [UsersService, UsersModule],
 })
 export class UsersModule {}

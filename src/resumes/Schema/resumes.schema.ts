@@ -5,11 +5,11 @@ export type ResumeDocument = HydratedDocument<Resume>;
 
 @Schema({ timestamps: true })
 export class Resume {
-  @Prop({ required: true })
+  @Prop()
   @IsEmail({}, { message: 'Invalid Email' })
   @IsNotEmpty({ message: 'Please Enter Your Email' })
   email: string;
-  @Prop({ required: true, type: Object })
+  @Prop({  type: Object })
   @IsNotEmpty({ message: 'Please Enter Your Email' })
   userId: {
     _id: mongoose.Schema.Types.ObjectId;
@@ -18,19 +18,19 @@ export class Resume {
   @Prop()
   @IsNotEmpty({ message: 'Please Enter Your Email' })
   status: string;
-  @Prop({ required: true, type: Object })
+  @Prop({ type: Object })
   @IsNotEmpty({ message: 'Please Enter Your Email' })
   companyId: {
     _id: mongoose.Schema.Types.ObjectId;
     email: string;
   };
-  @Prop({ required: true, type: Object })
+  @Prop({  type: Object })
   @IsNotEmpty({ message: 'Please Enter Your Email' })
   jobId: {
     _id: mongoose.Schema.Types.ObjectId;
     email: string;
   };
-  @Prop({ required: true, type: mongoose.Schema.Types.Array })
+  @Prop({ type: mongoose.Schema.Types.Array })
   @IsNotEmpty({ message: 'Please Enter Your Email' })
   history: {
     status: string;

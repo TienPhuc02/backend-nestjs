@@ -4,7 +4,7 @@ import { UpdateCompanyDto } from './dto/update-company.dto';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { Company, CompanyDocument } from './schema/company.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose from 'mongoose';
+import mongoose, { ObjectId } from 'mongoose';
 import { IUser } from 'src/users/users.interface';
 import aqp from 'api-query-params';
 import { User } from 'src/decorator/customize';
@@ -95,5 +95,9 @@ export class CompaniesService {
       return 'not found company';
     }
     return this.companyModel.findOneAndDelete({ _id: id }, { isDeleted: true });
+  }
+  findCompanyId(id: ObjectId) {
+    const findCompanyId = this.companyModel.findById({ _id: id });
+    return findCompanyId;
   }
 }
