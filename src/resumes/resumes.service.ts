@@ -12,6 +12,7 @@ import { UsersService } from 'src/users/users.service';
 import { CompaniesService } from '../companies/companies.service';
 import { JobsService } from 'src/jobs/jobs.service';
 import aqp from 'api-query-params';
+import { use } from 'passport';
 
 @Injectable()
 export class ResumesService {
@@ -92,8 +93,28 @@ export class ResumesService {
     return getResumeId;
   }
 
-  update(id: number, updateResumeDto: UpdateResumeDto) {
-    return `This action updates a #${id} resume`;
+  async update(id: string, status: string, user: IUser) {
+    const newResume = await this.resumeModel.updateOne(
+      { _id: id },
+      {
+        status,
+        updatedBy: {
+          _id: user._id,
+          email: user.email,
+        },
+        $push: {
+          history: {
+            status: status,
+            updateAt: new Date(),
+            updatedBy: {
+              _id: user._id,
+              email: user.email,
+            },
+          },
+        },
+      },
+    );
+    return newResume;
   }
 
   remove(id: number) {

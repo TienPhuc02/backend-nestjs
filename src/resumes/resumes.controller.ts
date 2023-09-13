@@ -38,7 +38,7 @@ export class ResumesController {
     @Query('pageSize') pageSize: string,
     @Query() qs: string,
   ) {
-    return this.resumesService.findAll(current,pageSize,qs);
+    return this.resumesService.findAll(current, pageSize, qs);
   }
 
   @Get(':id')
@@ -48,8 +48,13 @@ export class ResumesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateResumeDto: UpdateResumeDto) {
-    return this.resumesService.update(+id, updateResumeDto);
+  @ResponseMessage('Update Resume By Id Success!!')
+  updateStatus(
+    @Param('id') id: string,
+    @User() user: IUser,
+    @Body('status') status: string,
+  ) {
+    return this.resumesService.update(id, status, user);
   }
 
   @Delete(':id')
