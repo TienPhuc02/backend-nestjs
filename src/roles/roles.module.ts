@@ -6,9 +6,13 @@ import {
   Permission,
   PermissionSchema,
 } from 'src/permissions/Schema/permission.schema';
+import { Role, RoleSchema } from './Schema/role.schema';
 
 @Module({
   controllers: [RolesController],
   providers: [RolesService],
+  imports: [
+    MongooseModule.forFeature([{ name: Role.name, schema: RoleSchema }]),
+  ],
 })
 export class RolesModule {}

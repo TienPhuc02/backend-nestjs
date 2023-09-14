@@ -1,8 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IsBoolean, IsMongoId, IsNotEmpty } from 'class-validator';
-import mongoose from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 import { Permission } from 'src/permissions/Schema/permission.schema';
-
+export type RoleDocument = HydratedDocument<Role>;
 @Schema({ timestamps: true })
 export class Role {
   @Prop()

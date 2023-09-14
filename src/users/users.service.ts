@@ -25,7 +25,9 @@ export class UsersService {
 
   //check xem có đúng email không
   findOneByUsername(username: string) {
-    return this.userModel.findOne({ email: username });
+    return this.userModel
+      .findOne({ email: username })
+      .populate({ path: 'role', select: { name: 1, permissions: 1 } });
   }
   //check password nhập vào với hash password
   isValidPassword(password: string, hashPassword: string) {
@@ -107,6 +109,10 @@ export class UsersService {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return `not found user`;
     }
+    const foundUser = await this.userModel.findById({ _id: id });
+    if (foundUser.email === 'admin@gmail.com') {
+      throw new BadRequestException('không thể xóa tài khoản admin');
+    }
     await this.userModel.updateOne(
       { _id: id },
       {
@@ -122,7 +128,15 @@ export class UsersService {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return 'not found user';
     }
-    return await this.userModel.findOne({ _id: id }).select('-password');
+    return (
+      await this.userModel.findOne({ _id: id }).select('-password')
+    ).populate({
+      path: 'role',
+      select: {
+        name: 1,
+        _id: 1,
+      },
+    });
   }
 
   async findAll(current: string, pageSize: string, qs: string) {

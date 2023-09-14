@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { IsEmail, IsNotEmpty } from 'class-validator';
+import { Role } from 'src/roles/Schema/role.schema';
 export type UserDocument = HydratedDocument<User>;
 
 @Schema({ timestamps: true })
@@ -24,7 +25,7 @@ export class User {
     _id: mongoose.Schema.Types.ObjectId;
     email: string;
   };
-  @Prop()
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Role.name })
   role: string;
   @Prop()
   refreshToken: string;

@@ -30,7 +30,6 @@ export class Resume {
   };
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Job.name })
-  @IsNotEmpty({ message: 'Please Enter Your Email' })
   jobId: {
     _id: mongoose.Schema.Types.ObjectId;
     email: string;

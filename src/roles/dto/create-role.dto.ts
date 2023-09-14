@@ -1,5 +1,5 @@
 import { Prop } from '@nestjs/mongoose';
-import { IsBoolean, IsMongoId, IsNotEmpty } from 'class-validator';
+import { IsArray, IsBoolean, IsMongoId, IsNotEmpty } from 'class-validator';
 import mongoose from 'mongoose';
 
 export class CreateRoleDto {
@@ -11,6 +11,6 @@ export class CreateRoleDto {
   @IsBoolean({ message: 'Please Enter Your Boolean' })
   isActive: boolean;
   @IsNotEmpty({ message: 'Please Enter Your Permission' })
-  @IsMongoId({ message: 'Each Permission is mongo object id' })
+  @IsArray({ message: 'permission có dạng là array' })
   permissions: mongoose.Schema.Types.ObjectId[];
 }
