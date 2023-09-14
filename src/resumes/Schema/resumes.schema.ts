@@ -1,6 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { IsEmail, IsNotEmpty } from 'class-validator';
+import { Job } from 'src/jobs/Schema/job.schema';
+import { Company } from 'src/companies/schema/company.schema';
+import { User } from 'src/users/schemas/user.schema';
 export type ResumeDocument = HydratedDocument<Resume>;
 
 @Schema({ timestamps: true })
@@ -9,7 +12,7 @@ export class Resume {
   @IsEmail({}, { message: 'Invalid Email' })
   @IsNotEmpty({ message: 'Please Enter Your Email' })
   email: string;
-  @Prop({  type: Object })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name })
   @IsNotEmpty({ message: 'Please Enter Your Email' })
   userId: {
     _id: mongoose.Schema.Types.ObjectId;
@@ -18,13 +21,13 @@ export class Resume {
   @Prop()
   @IsNotEmpty({ message: 'Please Enter Your Email' })
   status: string;
-  @Prop({ type: Object })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Company.name })
   @IsNotEmpty({ message: 'Please Enter Your Email' })
   companyId: {
     _id: mongoose.Schema.Types.ObjectId;
     email: string;
   };
-  @Prop({  type: Object })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Job.name })
   @IsNotEmpty({ message: 'Please Enter Your Email' })
   jobId: {
     _id: mongoose.Schema.Types.ObjectId;

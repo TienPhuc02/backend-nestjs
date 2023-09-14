@@ -23,7 +23,7 @@ export class ResumesService {
     private readonly companiesService: CompaniesService,
   ) {}
   async create(createResumeCVDto: CreateResumeCVDto, user: IUser) {
-    const { companyId, jobId } = createResumeCVDto;
+    const { companyId, jobId, url } = createResumeCVDto;
     const isExistUserId = await this.jobsService.findUserId(jobId);
     if (!isExistUserId) {
       throw new BadRequestException(` ${jobId}  not found`);
@@ -38,6 +38,9 @@ export class ResumesService {
       email: user.email,
       userId: user._id,
       status: 'PENDING',
+      url,
+      companyId,
+      jobId,
       history: [
         {
           status: 'PENDING',
@@ -89,7 +92,7 @@ export class ResumesService {
   }
 
   async findOne(id: string) {
-    const getResumeId = await this.resumeModel.findById({ _id: id });
+    const getResumeId = await this.resumeModel.findOne({ _id: id });
     return getResumeId;
   }
 
@@ -117,7 +120,25 @@ export class ResumesService {
     return newResume;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} resume`;
+  async remove(id: string, user: IUser) {
+    await this.resumeModel.updateOne(
+      {
+        _id: id,
+      },
+      {
+        deleteBy: {
+          _id: user._id,
+          email: user.email,
+        },
+      },
+    );
+    return this.resumeModel.softDelete({
+      _id: id,
+    });
+  }
+  async findResumeByUser(user: IUser) {
+    return await this.resumeModel.find({
+      userId: user._id,
+    });
   }
 }

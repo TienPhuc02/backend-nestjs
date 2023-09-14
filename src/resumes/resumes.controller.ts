@@ -58,7 +58,12 @@ export class ResumesController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.resumesService.remove(+id);
+  remove(@Param('id') id: string, @User() user: IUser,) {
+    return this.resumesService.remove(id,user);
+  }
+  @Post('/by-user')
+  @ResponseMessage('Get A Resume With User Success!!')
+  findResumeByUser(@User() user: IUser) {
+    return this.resumesService.findResumeByUser(user);
   }
 }

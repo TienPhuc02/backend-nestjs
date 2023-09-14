@@ -80,7 +80,7 @@ export class JobsService {
     return this.jobModel.findOne({ _id: id });
   }
   async findUserId(id: ObjectId) {
-    return await this.jobModel.findById({ _id: id });
+    return await this.jobModel.findOne({ _id: id });
   }
   async update(id: string, updateJobDto: UpdateJobDto, user: IUser) {
     const {
