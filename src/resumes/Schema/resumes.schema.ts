@@ -22,11 +22,13 @@ export class Resume {
   @IsNotEmpty({ message: 'Please Enter Your Email' })
   status: string;
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Company.name })
+  // dùng ref để lấy data join bảng
   @IsNotEmpty({ message: 'Please Enter Your Email' })
   companyId: {
     _id: mongoose.Schema.Types.ObjectId;
     email: string;
   };
+
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Job.name })
   @IsNotEmpty({ message: 'Please Enter Your Email' })
   jobId: {
