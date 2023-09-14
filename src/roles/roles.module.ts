@@ -8,11 +8,6 @@ import {
 } from 'src/permissions/Schema/permission.schema';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([
-      { name: Permission.name, schema: PermissionSchema },
-    ]),
-  ],
   controllers: [RolesController],
   providers: [RolesService],
 })

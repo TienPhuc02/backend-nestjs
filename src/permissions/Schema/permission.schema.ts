@@ -1,19 +1,19 @@
-import { Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IsNotEmpty } from 'class-validator';
 import mongoose, { HydratedDocument } from 'mongoose';
 export type PermissionDocument = HydratedDocument<Permission>;
+@Schema({timestamps:true})
 export class Permission {
   @Prop()
-  @IsNotEmpty({ message: 'Please Enter Your Name' })
   name: string;
   @Prop()
-  @IsNotEmpty({ message: 'Please Enter Your ApiPath' })
+
   apiPath: string;
   @Prop()
-  @IsNotEmpty({ message: 'Please Enter Your Method' })
+
   method: string;
   @Prop()
-  @IsNotEmpty({ message: 'Please Enter Your Module' })
+
   module: string;
   @Prop()
   createdAt: Date;

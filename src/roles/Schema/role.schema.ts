@@ -1,7 +1,8 @@
-import { Prop } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IsBoolean, IsMongoId, IsNotEmpty } from 'class-validator';
 import mongoose from 'mongoose';
 
+@Schema({timestamps:true})
 export class Role {
   @Prop()
   @IsNotEmpty({ message: 'Please Enter Your Name' })
@@ -39,3 +40,4 @@ export class Role {
     email:string
   };
 }
+export const RoleSchema = SchemaFactory.createForClass(Role);
