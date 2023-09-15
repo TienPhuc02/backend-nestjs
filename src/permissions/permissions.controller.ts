@@ -12,7 +12,7 @@ import { PermissionsService } from './permissions.service';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { IUser } from 'src/users/users.interface';
-import { ResponseMessage, User } from 'src/decorator/customize';
+import { Public, ResponseMessage, User } from 'src/decorator/customize';
 
 @Controller('permissions')
 export class PermissionsController {
@@ -34,6 +34,8 @@ export class PermissionsController {
     };
   }
 
+  
+  @Public()
   @Get()
   @ResponseMessage('Get Permission With Paginate Success!!')
   findAll(
