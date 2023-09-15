@@ -22,6 +22,10 @@ export class AuthService {
       const isValid = this.usersService.isValidPassword(pass, user.password);
       if (isValid === true) {
         const userRole = user.role as unknown as { _id: string; name: string };
+        console.log(
+          '🚀 ~ file: auth.service.ts:25 ~ AuthService ~ validateUser ~ userRole:',
+          userRole,
+        );
         const temp = await this.rolesService.findOne(userRole._id);
         const objUser = {
           ...user.toObject(),
@@ -50,7 +54,6 @@ export class AuthService {
       name,
       email,
       role,
-      permissions,
     };
     const refresh_token = this.createRefreshToken(payload);
 
@@ -72,6 +75,7 @@ export class AuthService {
         name,
         email,
         role,
+        permissions,
       },
     };
   }
