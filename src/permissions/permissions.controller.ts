@@ -34,8 +34,6 @@ export class PermissionsController {
     };
   }
 
-  
-  @Public()
   @Get()
   @ResponseMessage('Get Permission With Paginate Success!!')
   findAll(

@@ -8,7 +8,7 @@ import { Role, RoleDocument } from './Schema/role.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import aqp from 'api-query-params';
 import mongoose from 'mongoose';
-
+import { ADMIN_ROLE } from 'src/databases/sample';
 @Injectable()
 export class RolesService {
   @InjectModel(Role.name)
@@ -101,7 +101,7 @@ export class RolesService {
       return `not found user`;
     }
     const foundRole = await this.roleModel.findById({ _id: id });
-    if (foundRole.name === 'ADMIN') {
+    if (foundRole.name === ADMIN_ROLE) {
       throw new BadRequestException('không thể xóa role Admin');
     }
     await this.roleModel.updateOne(

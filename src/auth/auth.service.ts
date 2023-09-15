@@ -6,12 +6,14 @@ import { CreateUserDto, RegisterUserDto } from 'src/users/dto/create-user.dto';
 import ms from 'ms';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
+import { RolesService } from 'src/roles/roles.service';
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
     private configService: ConfigService,
+    private rolesService: RolesService,
   ) {}
 
   async validateUser(username: string, pass: string): Promise<any> {
@@ -19,7 +21,13 @@ export class AuthService {
     if (user) {
       const isValid = this.usersService.isValidPassword(pass, user.password);
       if (isValid === true) {
-        return user;
+        const userRole = user.role as unknown as { _id: string; name: string };
+        const temp = await this.rolesService.findOne(userRole._id);
+        const objUser = {
+          ...user.toObject(),
+          permissions: temp?.permissions ?? [],
+        };
+        return objUser;
       }
     }
     return null;
@@ -34,7 +42,7 @@ export class AuthService {
 
   //practice project
   async login(user: IUser, response: Response) {
-    const { _id, name, email, role } = user;
+    const { _id, name, email, role, permissions } = user;
     const payload = {
       sub: 'token login',
       iss: 'from server',
@@ -42,6 +50,7 @@ export class AuthService {
       name,
       email,
       role,
+      permissions,
     };
     const refresh_token = this.createRefreshToken(payload);
 
@@ -96,6 +105,10 @@ export class AuthService {
         //update user with refresh token
         await this.usersService.updateUserToken(refresh_token, _id.toString());
 
+        //fetch user'role
+        const userRole = user.role as unknown as { _id: string; name: string };
+        const temp = await this.rolesService.findOne(userRole._id);
+
         //check xem đúng với refresh token của user tạo refresh token đấy hay không
 
         //set cookies as refresh token
@@ -112,6 +125,7 @@ export class AuthService {
             name,
             email,
             role,
+            permissions: temp?.permissions ?? [],
           },
         };
       }
@@ -126,6 +140,6 @@ export class AuthService {
   handleLogoutUser = async (user, response) => {
     this.usersService.updateUserToken('', user._id);
     response.clearCookie('refresh_token');
-    return "Logout Success"
+    return 'Logout Success';
   };
 }

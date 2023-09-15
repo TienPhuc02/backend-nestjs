@@ -14,10 +14,15 @@ import { JwtAuthGuard } from './jwt-auth.guard';
 import { IUser } from 'src/users/users.interface';
 import { CreateUserDto, RegisterUserDto } from 'src/users/dto/create-user.dto';
 import { Request, Response } from 'express';
+import { RolesService } from 'src/roles/roles.service';
+import { Permission } from '../permissions/Schema/permission.schema';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private rolesService: RolesService,
+  ) {}
 
   @Public()
   @UseGuards(LocalAuthGuard)
@@ -37,7 +42,9 @@ export class AuthController {
   //get account when user f5
   @ResponseMessage('Get Account Success!!')
   @Get('/account')
-  handleGetAccount(@User() user: IUser) {
+  async handleGetAccount(@User() user: IUser) {
+    const temp = (await this.rolesService.findOne(user.role._id)) as any;
+    user.permission = temp.permission;
     return { user };
   }
 
@@ -53,20 +60,15 @@ export class AuthController {
     return this.authService.processNewToken(refreshToken, response);
   }
 
-
-  @ResponseMessage("Logout User Success!!")
-  @Post("/logout")
+  @ResponseMessage('Logout User Success!!')
+  @Post('/logout')
   handleLogoutUser(
-    @User() user:IUser,
+    @User() user: IUser,
     @Res({ passthrough: true }) response: Response,
     // response thường hay làm việc với refresh token ở cookies
-
-
-  ){
-    return this.authService.handleLogoutUser(user,response)
+  ) {
+    return this.authService.handleLogoutUser(user, response);
   }
-
-
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
